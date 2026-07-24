@@ -1,0 +1,65 @@
+Screen {
+    background: #252a2c;
+}
+
+#main_title {
+    height: 3;
+    margin: 1 2;
+    border: solid white;
+    content-align: center middle;
+}
+
+#main_content {
+    height: 1fr;
+    margin: 1 2;
+}
+
+.box {
+    border: solid white;
+    background: #4b4d49;
+    padding: 1;
+}
+
+#chat_sidebar {
+    width: 1fr;
+    margin-right: 1;
+}
+
+#chat_area {
+    width: 3fr;
+}
+
+.box_title {
+    height: 2;
+    text-style: bold;
+}
+
+#chat_sidebar Button {
+    width: 100%;
+    margin-bottom: 1;
+}
+
+#chat_history {
+    height: 1fr;
+    padding: 1;
+}
+
+#input_row {
+    height: 3;
+}
+
+#message_input {
+    width: 1fr;
+}
+
+#send_button {
+    width: 12;
+    margin-left: 1;
+}
+
+.bottom_bar {
+    height: 1;
+    width: 100%;
+    content-align: center middle;
+    color: white;
+}
