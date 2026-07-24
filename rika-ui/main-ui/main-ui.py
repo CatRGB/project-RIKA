@@ -11,7 +11,7 @@ class ConsolUI(App):
     def compose(self) -> ComposeResult:
         # Titel
         yield Static(
-            "[bold green]RIK[/bold green]",
+            "[bold green]RIKA[/bold green]",
             id="main_title",
         )
 
