@@ -8,7 +8,7 @@ def create_connection():
         port=int(os.getenv("DB_PORT", "3306")),
         database=os.getenv("DB_NAME", "rika"),
         user=os.getenv("DB_USER", "rika_user"),
-        password=os.getenv("DB_PASSWORD"),
+        password=os.getenv("Josi"),
         cursorclass=pymysql.cursors.DictCursor
     )
 

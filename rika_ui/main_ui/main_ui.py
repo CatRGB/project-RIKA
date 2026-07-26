@@ -4,6 +4,8 @@ from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.widgets import Button, Input, Label, RichLog, Static
 
+import rika_core.chat_manager as chat_manager
+
 
 class ConsolUI(App):
     CSS_PATH = "css/layouts.tcss"
@@ -120,11 +122,23 @@ class ConsolUI(App):
             self.open_chat(event.button.label.plain)
 
     def create_new_chat(self) -> None:
-        """Erstellt später einen neuen Chat."""
-        self.log_message(
-            "Neuer Chat wurde erstellt.",
-            log_type="success",
-        )
+        """Erstellt ein neuen Chat."""
+        username = chat_manager.get_or_create_local_user().username
+        if username == "Unbekannt":
+            self.log_message(
+                "Es wurde kein gültiger Benutzername gefunden.",
+                log_type="warning",
+            )
+
+            while True:
+                        username = input("Bitte geben Sie einen gültigen Benutzernamen ein: ").strip()
+                        if username:
+                            chat_manager.set_local_user(username)
+                            self.log_message(
+                                f"Neuer Benutzername '{username}' wurde gespeichert.",
+                                log_type="success",
+                            )
+                            break
 
     def open_chat(self, chat_name: str) -> None:
         """Öffnet einen ausgewählten Chat."""
