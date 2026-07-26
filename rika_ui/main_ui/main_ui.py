@@ -104,6 +104,8 @@ class ConsolUI(App):
 
     def on_mount(self) -> None:
         """Wird ausgeführt, wenn die Oberfläche vollständig geladen wurde."""
+        self.current_chat = None
+
         self.log_message(
             "RIKA-Konsole wurde gestartet.",
             log_type="system",
@@ -122,23 +124,45 @@ class ConsolUI(App):
             self.open_chat(event.button.label.plain)
 
     def create_new_chat(self) -> None:
-        """Erstellt ein neuen Chat."""
-        username = chat_manager.get_or_create_local_user().username
-        if username == "Unbekannt":
+        """Erstellt einen neuen Chat."""
+
+        chat_name = "Neuer Chat"
+
+        try:
+            new_chat = chat_manager.ChatRoom(name=chat_name)
+            new_chat.create()
+
+            if new_chat.id is None:
+                self.log_message(
+                    "Fehler beim Erstellen des neuen Chats.",
+                    log_type="error",
+                )
+                return
+
+            self.current_chat = new_chat
+
             self.log_message(
-                "Es wurde kein gültiger Benutzername gefunden.",
-                log_type="warning",
+                f"Neuer Chat '{new_chat.name}' wurde erstellt.",
+                log_type="success",
             )
 
-            while True:
-                        username = input("Bitte geben Sie einen gültigen Benutzernamen ein: ").strip()
-                        if username:
-                            chat_manager.set_local_user(username)
-                            self.log_message(
-                                f"Neuer Benutzername '{username}' wurde gespeichert.",
-                                log_type="success",
-                            )
-                            break
+            username = (
+                new_chat.local_user.username
+                if new_chat.local_user is not None
+                else "Unbekannt"
+            )
+
+            self.log_message(
+                f"Chat '{new_chat.name}' wurde für "
+                f"'{username}' erstellt.",
+                log_type="success",
+            )
+
+        except Exception as error:
+            self.log_message(
+                f"Fehler beim Erstellen des neuen Chats: {error}",
+                log_type="error",
+            )
 
     def open_chat(self, chat_name: str) -> None:
         """Öffnet einen ausgewählten Chat."""

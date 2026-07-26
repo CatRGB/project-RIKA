@@ -1,6 +1,6 @@
 import datetime
 
-from database import (
+from rika_core.datenbank import (
     create_chat as create_chat_in_database,
     create_local_user,
     get_local_user,
