@@ -1,15 +1,31 @@
 import os
+from pathlib import Path
+
 import pymysql
+from dotenv import load_dotenv
+
+
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(PROJECT_DIR / ".env")
 
 
 def create_connection():
+    password = os.getenv("DB_PASSWORD")
+
+    if not password:
+        raise RuntimeError(
+            "Die Umgebungsvariable DB_PASSWORD wurde nicht gesetzt."
+        )
+
     return pymysql.connect(
-        host=os.getenv("DB_HOST", "mariadb"),
+        host=os.getenv("DB_HOST", "127.0.0.1"),
         port=int(os.getenv("DB_PORT", "3306")),
         database=os.getenv("DB_NAME", "rika"),
         user=os.getenv("DB_USER", "rika_user"),
-        password=os.getenv("Josi"),
-        cursorclass=pymysql.cursors.DictCursor
+        password=password,
+        charset="utf8mb4",
+        cursorclass=pymysql.cursors.DictCursor,
+        autocommit=False,
     )
 
 
@@ -56,17 +72,17 @@ def create_local_user(username: str):
     finally:
         connection.close()
 
-def create_chat(chat_name: str):
+def create_chat(chat_name: str, user_id: int) -> dict:
     connection = create_connection()
 
     try:
         with connection.cursor() as cursor:
             cursor.execute(
                 """
-                INSERT INTO chats (name)
-                VALUES (%s)
+                INSERT INTO chats (name, user_id)
+                VALUES (%s, %s)
                 """,
-                (chat_name,)
+                (chat_name, user_id),
             )
 
             chat_id = cursor.lastrowid
@@ -74,7 +90,8 @@ def create_chat(chat_name: str):
 
             return {
                 "id": chat_id,
-                "name": chat_name
+                "name": chat_name,
+                "user_id": user_id,
             }
     finally:
         connection.close()

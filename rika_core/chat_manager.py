@@ -133,7 +133,10 @@ class ChatRoom:
 
         user = self.get_or_create_local_user()
 
-        chat_data = create_chat_in_database(self.name)
+        chat_data = create_chat_in_database(
+            chat_name=self.name,
+            user_id=user.id,
+        )
         self.id = chat_data["id"]
 
         self.join_room(user)
